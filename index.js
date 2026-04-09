@@ -1,7 +1,8 @@
+import "dotenv/config";
 import { Client, Events, GatewayIntentBits } from "discord.js";
 import fs from "fs/promises";
-import path from "path";
 import { loadConfig, getConfig } from "./utils/configWatcher.js";
+
 
 const client = new Client({
 	 intents: [
@@ -45,7 +46,7 @@ client.on("messageCreate", msg => {
 
 const start = async () => {
 	await loadConfig();
-	client.login(getConfig().token);
+	client.login(process.env.TOKEN);
 }
 
 start();

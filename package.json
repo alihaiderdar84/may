@@ -1,12 +1,12 @@
 {
   "dependencies": {
-    "discord.js": "^14.26.2"
+    "discord.js": "^14.26.2",
+    "dotenv": "^17.4.1"
   },
   "name": "may",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
-  "devDependencies": {},
   "keywords": [],
   "author": "ali",
   "license": "UNLICENSED",
