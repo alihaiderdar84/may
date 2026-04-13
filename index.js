@@ -1,7 +1,7 @@
 import "dotenv/config";
 import { Client, Events, GatewayIntentBits } from "discord.js";
 import fs from "fs/promises";
-import { loadConfig, getConfig } from "./utils/configWatcher.js";
+import { loadConfig, getConfig, watchCommands } from "./utils/configWatcher.js";
 
 
 const client = new Client({
@@ -16,19 +16,18 @@ const client = new Client({
 
 client.commands = new Map();
 
-const loadCommands = async (client) => {
+const loadCommands = async () => {
 	const files = await fs.readdir("./commands")
 	const commandFiles = files.filter(f => f.endsWith(".js"));
 
 	for (const file of commandFiles) {
-		const command = await import(`./commands/${file}`);
+		const command = await import(`./commands/${file}?t=${Date.now()}`);
 		client.commands.set(command.default.name, command.default)
 	}
 }
 
 client.once("clientReady", () => {
 	console.log(`Logged in as ${client.user.tag}`)
-	loadCommands(client);
 });
 
 
@@ -41,11 +40,16 @@ client.on("messageCreate", msg => {
 
 	const [cmd, ...args] = msg.content.slice(prefix.length).trim().split(/\s+/); 
 	
-	client.commands.has(cmd) ? client.commands.get(cmd).execute(msg, args) : console.error(`\`${cmd}\` is not a commmand`)
+	const command = client.commands.get(cmd);
+	if (!command) return console.error(`\`${cmd}\` is not a commmand`);
+
+	 command.execute(client, msg, args);
 });
 
 const start = async () => {
 	await loadConfig();
+	await loadCommands();
+	watchCommands(client);
 	client.login(process.env.TOKEN);
 }
 
