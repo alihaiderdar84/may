@@ -1,7 +1,7 @@
 import "dotenv/config";
 import { Client, Events, GatewayIntentBits } from "discord.js";
 import fs from "fs/promises";
-import { loadConfig, getConfig, watchCommands } from "./utils/configWatcher.js";
+import { loadConfig, getConfig, watchCommands } from "./utils/watcher.js";
 
 
 const client = new Client({
