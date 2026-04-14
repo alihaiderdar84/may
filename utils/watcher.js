@@ -1,6 +1,7 @@
 import fs from "fs/promises";
 import chokidar from "chokidar";
 import path from "path";
+import { logError } from "./utils/logError.js";
 
 const configPath = path.join(process.cwd(), "config.json");
 
@@ -11,7 +12,7 @@ const loadConfig = async () => {
        const newConfig = JSON.parse(await fs.readFile(configPath, "utf-8"));
        config = newConfig;
     } catch(err) {
-        console.error(`Couldn't load config: ${err}`)
+        logError(`Couldn't load config: ${err}`)
     }
 }
 

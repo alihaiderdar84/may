@@ -2,6 +2,8 @@ import "dotenv/config";
 import { Client, Events, GatewayIntentBits } from "discord.js";
 import fs from "fs/promises";
 import { loadConfig, getConfig, watchCommands } from "./utils/watcher.js";
+import { logError } from "./utils/logError.js";
+import { reply } from "./utils/embeds.js";
 
 
 const client = new Client({
@@ -41,10 +43,20 @@ client.on("messageCreate", msg => {
 	const [cmd, ...args] = msg.content.slice(prefix.length).trim().split(/\s+/); 
 	
 	const command = client.commands.get(cmd);
-	if (!command) return console.error(`\`${cmd}\` is not a commmand`);
+	if (!command) return reply(msg, { type: "error", desc: `\`${cmd}\` is not a command`});
 
-	 command.execute(client, msg, args);
+	try {
+		command.execute(client, msg, args);
+	} catch (err) {
+		logError(`[${command.name}] ${err}`);
+
+		reply(msg, { type: "error", desc: "Something went wrong"})
+	}
+	 
 });
+
+process.on("uncaughtException", logError);
+process.on("unhandledRejection", logError);
 
 const start = async () => {
 	await loadConfig();
