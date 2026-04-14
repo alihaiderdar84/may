@@ -1,6 +1,6 @@
 import { EmbedBuilder } from "discord.js";
 import { getConfig } from "./watcher.js";
-import { logError } from "./utils/logError.js";
+import { logError } from "./logError.js";
 
 const buildEmbed = (msg, options = {}) => {
     const { title, desc, color, type = "default", image, footer = getConfig().embeds.footer, timestamp = getConfig().embeds.timestamp, author = getConfig().embeds.author, fields = [] } = options;

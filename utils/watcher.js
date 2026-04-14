@@ -1,7 +1,7 @@
 import fs from "fs/promises";
 import chokidar from "chokidar";
 import path from "path";
-import { logError } from "./utils/logError.js";
+import { logError } from "./logError.js";
 
 const configPath = path.join(process.cwd(), "config.json");
 
