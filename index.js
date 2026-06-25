@@ -43,10 +43,7 @@ client.on("messageCreate", (msg) => {
 
   const command = client.commands.get(cmd);
 
-  if (prefix === "may" && !command) return;
-
-  if (!command)
-    return reply(msg, { type: "error", desc: `\`${cmd}\` is not a command` });
+  if (!command) return;
 
   try {
     command.execute(client, msg, args);
