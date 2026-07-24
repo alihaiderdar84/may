@@ -1,8 +1,10 @@
-import { logError } from "../utils/logError.js";
+import { resolveUser, resolveRole } from "../utils/resolver.js";
 export default {
     name: "ali",
     description: "test command",
-    execute(client, msg, args) {
-        throw new Error("way too goated");
+   async execute(client, msg, args) {
+        const ali = await resolveUser(client, msg, args[0]);
+        console.log(ali);
+        msg.reply(ali.username);
     }
 }
