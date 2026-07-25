@@ -1,5 +1,5 @@
 const resolveUser = async (client, msg, input) => {
-  if (!input) return null;
+  if (!input) return;
   const userMention = input.match(/^<@!?(\d+)>$/);
   if (userMention) {
     return await client.users.fetch(userMention[1]).catch(() => null);
@@ -16,10 +16,10 @@ const resolveUser = async (client, msg, input) => {
     const user = await client.users.fetch(id).catch(() => null);
     if (user) return user;
 
-    return null;
+    return;
   }
 
-  if (!msg.guild) return null;
+  if (!msg.guild) return;
   const query = input.replace("@", "").toLowerCase();
 
   let member = msg.guild.members.cache.find(
@@ -45,16 +45,16 @@ const resolveUser = async (client, msg, input) => {
       m.user.username.toLowerCase().includes(query) ||
       m.displayName.toLowerCase().includes(query),
   );
-  return partial?.user ?? null;
+  return partial?.user;
 };
 
 const resolveRole = async (client, msg, input) => {
-  if (!input) return null;
+  if (!input) return;
   if (!msg.guild) return;
 
   const roleMention = input.match(/^<@&(\d+)>$/);
   if (roleMention) {
-    return msg.guild.roles.cache.get(roleMention[1]) || null;
+    return msg.guild.roles.cache.get(roleMention[1]);
   }
 
   if (/^\d+$/.test(input)) {
@@ -63,7 +63,7 @@ const resolveRole = async (client, msg, input) => {
     const role = msg.guild.roles.cache.get(id);
     if (role) return role;
 
-    return null;
+    return;
   }
 
   const query = input.replace("@", "").toLowerCase();
@@ -76,7 +76,7 @@ const resolveRole = async (client, msg, input) => {
   const partial = msg.guild.roles.cache.find((r) =>
     r.name.toLowerCase().includes(query),
   );
-  return partial ?? null;
+  return partial;
 };
 
 export { resolveUser, resolveRole }

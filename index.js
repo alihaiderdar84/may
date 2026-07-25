@@ -4,6 +4,8 @@ import fs from "fs/promises";
 import { loadConfig, getConfig, watchCommands } from "./utils/watcher.js";
 import { logError } from "./utils/logError.js";
 import { reply } from "./utils/embeds.js";
+import { parseCmd } from "./utils/parseCmd.js";
+import { executeCmd } from "./utils/executeCmd.js";
 
 const client = new Client({
   intents: [
@@ -33,25 +35,15 @@ client.once("clientReady", () => {
   console.log(`Logged in as ${client.user.tag}`);
 });
 
-client.on("messageCreate", (msg) => {
+client.on("messageCreate", async (msg) => {
   if (msg.author.bot || msg.author.id !== "1464193879493574762") return;
+  
+  const parsed = parseCmd(msg);
+  if (!parsed) return;
 
-  const prefix = getConfig().prefixes.find((p) => msg.content.startsWith(p));
-  if (!prefix) return;
+  const { commandName, args } = parsed;
 
-  const [cmd, ...args] = msg.content.slice(prefix.length).trim().split(/\s+/);
-
-  const command = client.commands.get(cmd);
-
-  if (!command) return;
-
-  try {
-    command.execute(client, msg, args);
-  } catch (err) {
-    logError(`[${command.name}] ${err}`);
-
-    reply(msg, { type: "error", desc: "Something went wrong" });
-  }
+  await executeCmd(client, msg, commandName, args);
 });
 
 process.on("uncaughtException", logError);
