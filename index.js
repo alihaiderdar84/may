@@ -1,9 +1,8 @@
 import "dotenv/config";
 import { Client, Events, GatewayIntentBits } from "discord.js";
 import fs from "fs/promises";
-import { loadConfig, getConfig, watchCommands } from "./utils/watcher.js";
+import { loadConfig, watchCommands } from "./utils/watcher.js";
 import { logError } from "./utils/logError.js";
-import { reply } from "./utils/embeds.js";
 import { parseCmd } from "./utils/parseCmd.js";
 import { executeCmd } from "./utils/executeCmd.js";
 
