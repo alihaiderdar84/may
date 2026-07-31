@@ -2,6 +2,7 @@ import util from "node:util";
 import { logError } from "../utils/logError.js";
 import { reply, send, edit, dm, buildEmbed } from "../utils/embeds.js";
 import { resolveUser, resolveRole } from "../utils/resolver.js";
+import { executeCmd } from "../utils/executeCmd.js";
 
 export default {
   name: "eval",
@@ -10,13 +11,19 @@ export default {
     let code = args.join(" ");
 
     const keep = /--keep\b/i.test(code);
+    const k = /-k\b/i.test(code);
 
-    code = code.replace(/--keep\b/gi, "").trim();
+    if (keep) code = code.replace(/--keep\b/gi, "").trim();
+    else if (k) code = code.replace(/-k\b/gi, "").trim();
+
+    const run = async (commandName, ...args) => {
+      await executeCmd(client, msg, commandName, args);
+    };
 
     try {
       const result = await eval(`(async () => { ${code} })()`);
 
-      const output =
+      let output =
         typeof result === "string"
           ? result
           : util.inspect(result, {
@@ -28,7 +35,10 @@ export default {
         title: "Eval Result",
         fields: [
           { name: "code", value: `\`\`\`js\n${code.slice(0, 1000)}\n\`\`\`` },
-          { name: "output", value: `\`\`\`js\n${output.slice(0, 1000)}\n\`\`\`` },
+          {
+            name: "output",
+            value: `\`\`\`js\n${output.slice(0, 1000)}\n\`\`\``,
+          },
         ],
       });
     } catch (err) {
