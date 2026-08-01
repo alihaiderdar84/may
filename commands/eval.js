@@ -16,6 +16,7 @@ export default {
     if (keep) code = code.replace(/--keep\b/gi, "").trim();
     else if (k) code = code.replace(/-k\b/gi, "").trim();
 
+
     const run = async (commandName, ...args) => {
       await executeCmd(client, msg, commandName, args);
     };
@@ -44,7 +45,7 @@ export default {
     } catch (err) {
       logError(err);
     } finally {
-      if (!keep) {
+      if (!keep && !k) {
         setTimeout(() => msg.delete().catch(() => {}), 1000);
       }
     }
