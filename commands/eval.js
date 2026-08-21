@@ -24,6 +24,8 @@ export default {
     try {
       const result = await eval(`(async () => { ${code} })()`);
 
+      await msg.react("✅");
+
       let output =
         typeof result === "string"
           ? result
