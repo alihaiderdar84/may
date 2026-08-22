@@ -1,5 +1,9 @@
 import repl from "node:repl";
 import { Writable, PassThrough } from "node:stream";
+import { logError } from "../utils/logError.js";
+import { reply, send, edit, dm, buildEmbed } from "../utils/embeds.js";
+import { resolveUser, resolveRole } from "../utils/resolver.js";
+import { executeCmd } from "../utils/executeCmd.js";
 
 const sessions = new Map();
 
@@ -20,10 +24,29 @@ const createSession = (userId, context) => {
     terminal: false,
   });
 
-  Object.assign(server.context, context);
+  const run = async (commandName, ...args) => {
+    await executeCmd(context.client, context.msg, commandName, args);
+  };
+
+  const helpers = {
+    reply,
+    send,
+    edit,
+    dm,
+    buildEmbed,
+    resolveUser,
+    resolveRole,
+    logError,
+    run,
+  };
+
+  Object.assign(server.context, {
+    ...context,
+    ...helpers
+  });
 
   sessions.set(userId, {
-    server
+    server,
   });
 
   return { server };
