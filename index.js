@@ -2,9 +2,10 @@ import "dotenv/config";
 import { Client, Events, GatewayIntentBits } from "discord.js";
 import fs from "fs/promises";
 import { loadConfig, watchCommands } from "./utils/watcher.js";
-import { logError } from "./utils/logError.js";
+import { logError } from "./utils/logs.js";
 import { parseCmd } from "./utils/parseCmd.js";
 import { executeCmd } from "./utils/executeCmd.js";
+import { connect } from "./utils/websockets.js";
 
 const client = new Client({
   intents: [
@@ -30,11 +31,7 @@ const loadCommands = async () => {
   }
 };
 
-client.once("clientReady", () => {
-  console.log(`Logged in as ${client.user.tag}`);
-});
-
-client.on("messageCreate", async (msg) => {
+const listener = async (msg) => {
   if (msg.author.bot || msg.author.id !== "1464193879493574762") return;
   
   const parsed = parseCmd(msg);
@@ -43,7 +40,14 @@ client.on("messageCreate", async (msg) => {
   const { commandName, args } = parsed;
 
   await executeCmd(client, msg, commandName, args);
+}
+
+client.once("clientReady", () => {
+  console.log(`Logged in as ${client.user.tag}`);
 });
+
+client.on("messageCreate", listener);
+client.on("messageUpdate", (_, newMsg) => listener(newMsg));
 
 process.on("uncaughtException", logError);
 process.on("unhandledRejection", logError);
@@ -52,6 +56,7 @@ const start = async () => {
   await loadConfig();
   await loadCommands();
   watchCommands(client);
+  connect();
   client.login(process.env.TOKEN);
 };
 

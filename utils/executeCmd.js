@@ -1,4 +1,4 @@
-import { logError } from "./logError.js";
+import { logError } from "./logs.js";
 import { reply } from "./embeds.js";
 
 const executeCmd = async (client, msg, commandName, args) => {

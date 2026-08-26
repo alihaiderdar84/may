@@ -1,5 +1,5 @@
 import util from "node:util";
-import { logError } from "../utils/logError.js";
+import { logError } from "../utils/logs.js";
 import { reply, send, edit, dm, buildEmbed } from "../utils/embeds.js";
 import { resolveUser, resolveRole } from "../utils/resolver.js";
 import { executeCmd } from "../utils/executeCmd.js";

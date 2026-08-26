@@ -2,7 +2,8 @@
   "dependencies": {
     "discord.js": "^14.26.2",
     "dotenv": "^17.4.1",
-    "pm2": "^6.0.14"
+    "pm2": "^6.0.14",
+    "strip-ansi": "^7.2.0"
   },
   "name": "may",
   "version": "1.0.0",
