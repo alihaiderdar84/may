@@ -1,4 +1,5 @@
 import { GoogleGenAI } from "@google/genai";
+import { logError } from "./logs.js";
 
 const ai = new GoogleGenAI({});
 
