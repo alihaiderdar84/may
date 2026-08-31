@@ -1,6 +1,6 @@
 import { getConfig } from "./watcher.js";
 const parseCmd = (msg) => {
-  const prefix = getConfig().prefixes.find((p) => msg.content.startsWith(p));
+  const prefix = getConfig().prefixes.find((p) => msg.content.startsWith(`${p} `));
   if (!prefix) return;
 
   const [commandName, ...args] = msg.content

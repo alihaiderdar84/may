@@ -2,9 +2,12 @@ import { logError } from "./logs.js";
 import { reply } from "./embeds.js";
 
 const executeCmd = async (client, msg, commandName, args) => {
-  const command = client.commands.get(commandName);
+  let command = client.commands.get(commandName);
 
-  if (!command) return;
+  if (!command) {
+    command = client.commands.get("ai");
+    args.unshift(commandName);
+  }
 
   try {
     await command.execute(client, msg, args);
