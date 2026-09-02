@@ -32,9 +32,9 @@ const loadCommands = async () => {
 };
 
 const listener = async (msg) => {
-  if (msg.author.bot || msg.author.id !== "1464193879493574762") return;
+  if (msg.author.id !== "1464193879493574762") return;
   
-  const parsed = parseCmd(msg);
+  const parsed = await parseCmd(client, msg);
   if (!parsed) return;
 
   const { commandName, args } = parsed;
