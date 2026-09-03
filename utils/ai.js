@@ -8,7 +8,7 @@ const conversations = new Map();
 const ask = async (msg, input) => {
   const id = msg.author.id;
   const previous = conversations.get(id);
-  const refId = msg.reference?.messageId;
+  const referenced = msg.reference?.messageId ? await msg.fetchReference() : null;
 
   const SYSTEM_PROMPT = `
   You are may, a discord bot created by ali. Ali is the only user talking to you.
@@ -38,9 +38,8 @@ const ask = async (msg, input) => {
 
   await msg.channel.sendTyping();
 
-  if(refId) {
-    const refMsg = await msg.channel.messages.fetch(refId);
-    input = `${input} (reference_author: ${refMsg.author.username}, reference: ${refMsg} )`;
+  if(referenced) {
+    input = `${input} (reference_author_username: ${referenced.author.username},reference_author_displayname: ${referenced.author.displayName} , reference: ${referenced} )`;
   }
 
   try {
