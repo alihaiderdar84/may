@@ -8,9 +8,9 @@ const parseCmd = async (client, msg) => {
    const reference = referenced?.author.id === client.user.id;
   if (!prefix && !reference) return;
 
-  if (prefix) msg.content.slice(prefix.length);
+  const content = prefix ? msg.content.slice(prefix.length): msg.content;
 
-  const [commandName, ...args] = msg.content.trim().split(/\s+/);
+  const [commandName, ...args] = content.trim().split(/\s+/);
 
   return {
     prefix,
